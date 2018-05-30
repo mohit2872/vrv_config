@@ -110,17 +110,6 @@ class App extends Component {
                         return (
                           <tr>
                             <td>{subKey}</td>
-                            <td>
-                              {/* <table border="1">
-                                <tbody>
-                                  {Object.keys(this.state.componentData[key][subKey]).map(superSubKey => {
-                                    return <tr><td>{superSubKey}</td></tr>
-                                  })}
-                                </tbody>
-                              </table> */}
-                              {console.log(subKey)}
-                              {console.log(this.state.componentData[key][subKey])}
-                            </td>
                           </tr>
                         )
                       })}
