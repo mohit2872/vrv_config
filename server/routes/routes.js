@@ -15,7 +15,7 @@ router.route('/addComponent').post(function(req,res) {
   // get default values and add with those values
   component.name = req.body.componentName;
   component.system = {  
-    init6: [{delay: 500, iteration: 1}],
+    init6: [{delay: 500, iteration: 1}, {delay: 300, iteration: 2}],
     reboot: [{delay: 300, iteration: 2}]
   }
   component.protocol = {

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import '../css/App.css';
 import axios from 'axios';
-import 'whatwg-fetch';
+import TreeStructure from './TreeStructure'
 
 var querystring = require('querystring');
 
@@ -14,7 +14,10 @@ class App extends Component {
         data: [],
         messageFromServer: '',
         componentSelected: '',
-        componentData: {}
+        componentData: {},
+        treeData: [
+         
+        ], 
     }
     
     this.onClickSelectComponent = this.onClickSelectComponent.bind(this);
@@ -41,9 +44,10 @@ class App extends Component {
     return obj;
   }
 
-  getDataComponent(data){
+  getDataComponent(data, selectedComponent){
+    var tempTree;
     data.map(component => {
-      if(component.name === this.state.componentSelected){
+      if(component.name === selectedComponent){
         var temp = this.cleanObject(component);
         this.setState({componentData: temp})
       }
@@ -69,7 +73,7 @@ class App extends Component {
     axios.get('/getAll')
       .then(response => {
         this.setState({data: response.data, componentSelected: response.data[0].name});
-        this.getDataComponent(response.data);
+        this.getDataComponent(response.data, this.state.componentSelected);
       });
   }
 
@@ -77,11 +81,12 @@ class App extends Component {
     var sel = document.getElementById("componentSelection");
     var componentName = sel.options[sel.selectedIndex].text;
     this.setState({componentSelected: componentName});
+    this.getDataComponent(this.state.data, componentName);
   }
 
   render() {
     return(
-      <div>
+      <div style={{ height: 500}}>
       <select id="componentSelection" onChange={this.onClickSelectComponent}>
         {this.state.data.map((component, i) => {
           return <option value={component.name}>{component.name}</option>
@@ -91,37 +96,9 @@ class App extends Component {
 
       <br/><br/>
       {/* based on component selected display the table */}
-      <table border="1">
-        <thead>
-          <tr>
-            <th>{this.state.componentSelected}</th>
-          </tr>
-        </thead>
-        
-        <tbody>
-          {Object.keys(this.state.componentData).map(key => {
-            return (
-              <tr>
-                <td>{key}</td>
-                <td>
-                  <table border="1">
-                    <tbody>
-                      {Object.keys(this.state.componentData[key]).map(subKey => {
-                        return (
-                          <tr>
-                            <td>{subKey}</td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-
-      </table>
+      <TreeStructure
+        componentData={this.state.componentData}
+      />
       <br/><br/>
 
       <button onClick={this.deleteComponent}>Delete Component</button>
